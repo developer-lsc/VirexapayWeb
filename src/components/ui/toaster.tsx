@@ -1,5 +1,11 @@
 import { useToast } from "@/hooks/use-toast";
 import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "@/components/ui/toast";
+import styled from "styled-components";
+
+const ToastContent = styled.div`
+  display: grid;
+  gap: 4px;
+`;
 
 export function Toaster() {
   const { toasts } = useToast();
@@ -9,10 +15,10 @@ export function Toaster() {
       {toasts.map(function ({ id, title, description, action, ...props }) {
         return (
           <Toast key={id} {...props}>
-            <div className="grid gap-1">
+            <ToastContent>
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && <ToastDescription>{description}</ToastDescription>}
-            </div>
+            </ToastContent>
             {action}
             <ToastClose />
           </Toast>

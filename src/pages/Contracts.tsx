@@ -1,14 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import styled from "styled-components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Plus,
-  Search,
-  FileSignature,
-  MoreHorizontal,
-  Eye,
-} from "lucide-react";
+import { Plus, Search, FileSignature, MoreHorizontal, Eye } from "lucide-react";
 
 const mockContracts = [
   { id: "1", client: "Maria Silva", title: "Consultoria de Marketing", value: "R$ 3.500,00", installments: 3, status: "Signed", date: "22/02/2026" },
@@ -18,13 +13,6 @@ const mockContracts = [
   { id: "5", client: "Maria Silva", title: "Assessoria Financeira", value: "R$ 5.000,00", installments: 4, status: "Cancelled", date: "10/02/2026" },
 ];
 
-const statusStyles: Record<string, string> = {
-  Draft: "bg-muted text-muted-foreground",
-  Sent: "bg-warning/10 text-warning",
-  Signed: "bg-success/10 text-success",
-  Cancelled: "bg-destructive/10 text-destructive",
-};
-
 const statusLabels: Record<string, string> = {
   Draft: "Rascunho",
   Sent: "Enviado",
@@ -32,99 +20,216 @@ const statusLabels: Record<string, string> = {
   Cancelled: "Cancelado",
 };
 
+const Header = styled.div`
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 30px;
+`;
+
+const Subtitle = styled.p`
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const SearchWrap = styled.div`
+  max-width: 380px;
+  margin-bottom: 24px;
+  position: relative;
+`;
+
+const SearchIcon = styled(Search)`
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const SearchInput = styled(Input)`
+  padding-left: 40px;
+`;
+
+const Card = styled(motion.div)`
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  background: ${({ theme }) => theme.colors.card};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+  overflow: hidden;
+`;
+
+const Overflow = styled.div`
+  overflow-x: auto;
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+`;
+
+const HeadCell = styled.th`
+  padding: 16px 24px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const Row = styled(motion.tr)`
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  &:last-child {
+    border-bottom: 0;
+  }
+`;
+
+const Cell = styled.td`
+  padding: 14px 24px;
+  font-size: 14px;
+`;
+
+const ContractCell = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const ContractIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: ${({ theme }) => theme.radius.md};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, ${({ theme }) => theme.colors.primary} 10%, transparent);
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+const Actions = styled.div`
+  display: flex;
+  gap: 6px;
+`;
+
+const ActionButton = styled.button`
+  border: 0;
+  background: transparent;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+  border-radius: ${({ theme }) => theme.radius.sm};
+  padding: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.muted};
+    color: ${({ theme }) => theme.colors.foreground};
+  }
+`;
+
+const Badge = styled.span<{ $status: string }>`
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: ${({ theme, $status }) =>
+    $status === "Signed"
+      ? theme.colors.success
+      : $status === "Sent"
+      ? theme.colors.warning
+      : $status === "Cancelled"
+      ? theme.colors.destructive
+      : theme.colors.mutedForeground};
+  background: ${({ theme, $status }) =>
+    $status === "Signed"
+      ? "color-mix(in srgb, " + theme.colors.success + " 12%, transparent)"
+      : $status === "Sent"
+      ? "color-mix(in srgb, " + theme.colors.warning + " 12%, transparent)"
+      : $status === "Cancelled"
+      ? "color-mix(in srgb, " + theme.colors.destructive + " 12%, transparent)"
+      : theme.colors.muted};
+`;
+
 const Contracts = () => {
   const [search, setSearch] = useState("");
 
   const filtered = mockContracts.filter(
-    (c) =>
-      c.title.toLowerCase().includes(search.toLowerCase()) ||
-      c.client.toLowerCase().includes(search.toLowerCase())
+    (c) => c.title.toLowerCase().includes(search.toLowerCase()) || c.client.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <div>
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <Header>
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Contratos</h1>
-          <p className="text-muted-foreground">{mockContracts.length} contratos</p>
+          <Title>Contratos</Title>
+          <Subtitle>{mockContracts.length} contratos</Subtitle>
         </div>
         <Button variant="accent">
-          <Plus className="mr-1 h-4 w-4" /> Novo contrato
+          <Plus size={16} /> Novo contrato
         </Button>
-      </div>
+      </Header>
 
-      {/* Search */}
-      <div className="mb-6 relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Buscar contratos..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9 h-11"
-        />
-      </div>
+      <SearchWrap>
+        <SearchIcon size={16} />
+        <SearchInput placeholder="Buscar contratos..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      </SearchWrap>
 
-      {/* Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl bg-card shadow-card border border-border/50 overflow-hidden"
-      >
-        <div className="overflow-x-auto">
-          <table className="w-full">
+      <Card initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}>
+        <Overflow>
+          <Table>
             <thead>
-              <tr className="border-b border-border text-left text-sm text-muted-foreground">
-                <th className="px-6 py-4 font-medium">Contrato</th>
-                <th className="px-6 py-4 font-medium">Cliente</th>
-                <th className="px-6 py-4 font-medium">Valor</th>
-                <th className="px-6 py-4 font-medium">Parcelas</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-6 py-4 font-medium">Data</th>
-                <th className="px-6 py-4 font-medium"></th>
+              <tr>
+                <HeadCell>Contrato</HeadCell>
+                <HeadCell>Cliente</HeadCell>
+                <HeadCell>Valor</HeadCell>
+                <HeadCell>Parcelas</HeadCell>
+                <HeadCell>Status</HeadCell>
+                <HeadCell>Data</HeadCell>
+                <HeadCell />
               </tr>
             </thead>
             <tbody>
               {filtered.map((c, i) => (
-                <motion.tr
-                  key={c.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.03 }}
-                  className="border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors"
-                >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                        <FileSignature className="h-4 w-4 text-primary" />
-                      </div>
-                      <span className="text-sm font-medium text-card-foreground">{c.title}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">{c.client}</td>
-                  <td className="px-6 py-4 text-sm font-medium text-card-foreground">{c.value}</td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">{c.installments}x</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${statusStyles[c.status]}`}>
-                      {statusLabels[c.status]}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">{c.date}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-1">
-                      <button className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      <button className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </motion.tr>
+                <Row key={c.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}>
+                  <Cell>
+                    <ContractCell>
+                      <ContractIcon>
+                        <FileSignature size={16} />
+                      </ContractIcon>
+                      <span>{c.title}</span>
+                    </ContractCell>
+                  </Cell>
+                  <Cell style={{ color: "hsl(215 16% 47%)" }}>{c.client}</Cell>
+                  <Cell>{c.value}</Cell>
+                  <Cell style={{ color: "hsl(215 16% 47%)" }}>{c.installments}x</Cell>
+                  <Cell>
+                    <Badge $status={c.status}>{statusLabels[c.status]}</Badge>
+                  </Cell>
+                  <Cell style={{ color: "hsl(215 16% 47%)" }}>{c.date}</Cell>
+                  <Cell>
+                    <Actions>
+                      <ActionButton>
+                        <Eye size={16} />
+                      </ActionButton>
+                      <ActionButton>
+                        <MoreHorizontal size={16} />
+                      </ActionButton>
+                    </Actions>
+                  </Cell>
+                </Row>
               ))}
             </tbody>
-          </table>
-        </div>
-      </motion.div>
+          </Table>
+        </Overflow>
+      </Card>
     </div>
   );
 };

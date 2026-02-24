@@ -1,9 +1,143 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileText, ArrowRight } from "lucide-react";
+
+const Page = styled.div`
+  display: flex;
+  min-height: 100vh;
+`;
+
+const FormSide = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+`;
+
+const FormWrap = styled.div`
+  width: 100%;
+  max-width: 380px;
+`;
+
+const Brand = styled(Link)`
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const BrandIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: ${({ theme }) => theme.radius.md};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.primaryForeground};
+`;
+
+const BrandText = styled.span`
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+`;
+
+const Title = styled.h1`
+  margin-bottom: 8px;
+  font-size: 28px;
+`;
+
+const Subtitle = styled.p`
+  margin-bottom: 32px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const Form = styled.form`
+  display: grid;
+  gap: 16px;
+`;
+
+const Field = styled.div`
+  display: grid;
+  gap: 8px;
+`;
+
+const RowBetween = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const SmallLink = styled(Link)`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.accent};
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const Footer = styled.p`
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const FooterLink = styled(Link)`
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.accent};
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const BrandingSide = styled.div`
+  width: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  background: ${({ theme }) => theme.gradients.hero};
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+`;
+
+const BrandingContent = styled.div`
+  max-width: 420px;
+  text-align: center;
+`;
+
+const BrandingIcon = styled.div`
+  margin: 0 auto 24px;
+  width: 64px;
+  height: 64px;
+  border-radius: ${({ theme }) => theme.radius.xl};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, ${({ theme }) => theme.colors.accent} 20%, transparent);
+  color: ${({ theme }) => theme.colors.accent};
+`;
+
+const BrandingTitle = styled.h2`
+  margin-bottom: 16px;
+  font-size: 32px;
+  color: ${({ theme }) => theme.colors.primaryForeground};
+`;
+
+const BrandingText = styled.p`
+  color: color-mix(in srgb, ${({ theme }) => theme.colors.primaryForeground} 60%, transparent);
+`;
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -11,44 +145,33 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: integrate auth
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left - Form */}
-      <div className="flex flex-1 items-center justify-center px-4 py-12">
-        <div className="w-full max-w-sm">
-          <Link to="/" className="mb-8 flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-              <FileText className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="font-heading text-xl font-bold text-foreground">Contraktor</span>
-          </Link>
+    <Page>
+      <FormSide>
+        <FormWrap>
+          <Brand to="/">
+            <BrandIcon>
+              <FileText size={20} />
+            </BrandIcon>
+            <BrandText>Contraktor</BrandText>
+          </Brand>
 
-          <h1 className="mb-2 font-heading text-2xl font-bold text-foreground">Bem-vindo de volta</h1>
-          <p className="mb-8 text-muted-foreground">Entre na sua conta para continuar.</p>
+          <Title>Bem-vindo de volta</Title>
+          <Subtitle>Entre na sua conta para continuar.</Subtitle>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
+          <Form onSubmit={handleSubmit}>
+            <Field>
               <Label htmlFor="email">E-mail</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="seu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="h-11"
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
+              <Input id="email" type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </Field>
+
+            <Field>
+              <RowBetween>
                 <Label htmlFor="password">Senha</Label>
-                <Link to="/recuperar-senha" className="text-sm text-accent hover:underline">
-                  Esqueceu a senha?
-                </Link>
-              </div>
+                <SmallLink to="/recuperar-senha">Esqueceu a senha?</SmallLink>
+              </RowBetween>
               <Input
                 id="password"
                 type="password"
@@ -56,38 +179,30 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="h-11"
               />
-            </div>
-            <Button type="submit" className="w-full h-11" variant="accent">
-              Entrar <ArrowRight className="ml-1 h-4 w-4" />
+            </Field>
+
+            <Button type="submit" variant="accent" size="lg">
+              Entrar <ArrowRight size={16} />
             </Button>
-          </form>
+          </Form>
 
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            Não tem conta?{" "}
-            <Link to="/registro" className="font-medium text-accent hover:underline">
-              Crie sua conta grátis
-            </Link>
-          </p>
-        </div>
-      </div>
+          <Footer>
+            Não tem conta? <FooterLink to="/registro">Crie sua conta grátis</FooterLink>
+          </Footer>
+        </FormWrap>
+      </FormSide>
 
-      {/* Right - Branding */}
-      <div className="hidden w-1/2 bg-hero lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-12">
-        <div className="max-w-md text-center">
-          <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/20">
-            <FileText className="h-8 w-8 text-accent" />
-          </div>
-          <h2 className="mb-4 font-heading text-3xl font-bold text-primary-foreground">
-            Gerencie contratos com facilidade
-          </h2>
-          <p className="text-primary-foreground/60">
-            Crie, assine e cobre automaticamente. Tudo em uma plataforma simples e segura.
-          </p>
-        </div>
-      </div>
-    </div>
+      <BrandingSide>
+        <BrandingContent>
+          <BrandingIcon>
+            <FileText size={32} />
+          </BrandingIcon>
+          <BrandingTitle>Gerencie contratos com facilidade</BrandingTitle>
+          <BrandingText>Crie, assine e cobre automaticamente. Tudo em uma plataforma simples e segura.</BrandingText>
+        </BrandingContent>
+      </BrandingSide>
+    </Page>
   );
 };
 

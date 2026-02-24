@@ -1,14 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import styled from "styled-components";
 import { Input } from "@/components/ui/input";
-import {
-  Search,
-  CreditCard,
-  Calendar,
-  AlertCircle,
-  CheckCircle2,
-  Clock,
-} from "lucide-react";
+import { Search, CreditCard, Calendar, AlertCircle, CheckCircle2, Clock } from "lucide-react";
 
 const mockInstallments = [
   { id: "1", contract: "Consultoria de Marketing", client: "Maria Silva", dueDate: "15/03/2026", amount: "R$ 1.166,67", status: "Pending" },
@@ -19,118 +13,234 @@ const mockInstallments = [
   { id: "6", contract: "Gestão de Redes Sociais", client: "Pedro Santos", dueDate: "01/03/2026", amount: "R$ 1.800,00", status: "Paid" },
 ];
 
-const statusConfig: Record<string, { label: string; icon: typeof Clock; style: string }> = {
-  Pending: { label: "Pendente", icon: Clock, style: "bg-warning/10 text-warning" },
-  Paid: { label: "Pago", icon: CheckCircle2, style: "bg-success/10 text-success" },
-  Overdue: { label: "Vencido", icon: AlertCircle, style: "bg-destructive/10 text-destructive" },
+const statusConfig: Record<string, { label: string; icon: typeof Clock }> = {
+  Pending: { label: "Pendente", icon: Clock },
+  Paid: { label: "Pago", icon: CheckCircle2 },
+  Overdue: { label: "Vencido", icon: AlertCircle },
 };
+
+const Header = styled.div`
+  margin-bottom: 32px;
+`;
+
+const Title = styled.h1`
+  font-size: 30px;
+`;
+
+const Subtitle = styled.p`
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const SummaryGrid = styled.div`
+  margin-bottom: 32px;
+  display: grid;
+  gap: 16px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+`;
+
+const SummaryCard = styled(motion.div)`
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  background: ${({ theme }) => theme.colors.card};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+  padding: 20px;
+`;
+
+const SummaryLabel = styled.p`
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const SummaryValue = styled.p<{ $tone: string }>`
+  font-size: 30px;
+  font-family: Inter, system-ui, sans-serif;
+  color: ${({ theme, $tone }) => ($tone === "warning" ? theme.colors.warning : $tone === "success" ? theme.colors.success : theme.colors.destructive)};
+`;
+
+const SearchWrap = styled.div`
+  max-width: 380px;
+  margin-bottom: 24px;
+  position: relative;
+`;
+
+const SearchIcon = styled(Search)`
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const SearchInput = styled(Input)`
+  padding-left: 40px;
+`;
+
+const TableCard = styled(motion.div)`
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  background: ${({ theme }) => theme.colors.card};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+  overflow: hidden;
+`;
+
+const Overflow = styled.div`
+  overflow-x: auto;
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+`;
+
+const HeadCell = styled.th`
+  padding: 16px 24px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const Row = styled(motion.tr)`
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  &:last-child {
+    border-bottom: 0;
+  }
+`;
+
+const Cell = styled.td`
+  padding: 14px 24px;
+  font-size: 14px;
+`;
+
+const ContractCell = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const ContractIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: ${({ theme }) => theme.radius.md};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, ${({ theme }) => theme.colors.primary} 10%, transparent);
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+const DateCell = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const StatusBadge = styled.span<{ $status: string }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: ${({ theme, $status }) =>
+    $status === "Paid" ? theme.colors.success : $status === "Overdue" ? theme.colors.destructive : theme.colors.warning};
+  background: ${({ theme, $status }) =>
+    $status === "Paid"
+      ? "color-mix(in srgb, " + theme.colors.success + " 12%, transparent)"
+      : $status === "Overdue"
+      ? "color-mix(in srgb, " + theme.colors.destructive + " 12%, transparent)"
+      : "color-mix(in srgb, " + theme.colors.warning + " 12%, transparent)"};
+`;
 
 const Installments = () => {
   const [search, setSearch] = useState("");
 
   const filtered = mockInstallments.filter(
-    (i) =>
-      i.contract.toLowerCase().includes(search.toLowerCase()) ||
-      i.client.toLowerCase().includes(search.toLowerCase())
+    (item) => item.contract.toLowerCase().includes(search.toLowerCase()) || item.client.toLowerCase().includes(search.toLowerCase()),
   );
+
+  const summary = [
+    { label: "Pendentes", count: mockInstallments.filter((i) => i.status === "Pending").length, tone: "warning" },
+    { label: "Pagas", count: mockInstallments.filter((i) => i.status === "Paid").length, tone: "success" },
+    { label: "Vencidas", count: mockInstallments.filter((i) => i.status === "Overdue").length, tone: "destructive" },
+  ];
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-heading text-2xl font-bold text-foreground">Parcelas</h1>
-        <p className="text-muted-foreground">Acompanhe todas as parcelas dos seus contratos</p>
-      </div>
+      <Header>
+        <Title>Parcelas</Title>
+        <Subtitle>Acompanhe todas as parcelas dos seus contratos</Subtitle>
+      </Header>
 
-      {/* Summary cards */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
-        {[
-          { label: "Pendentes", count: mockInstallments.filter(i => i.status === "Pending").length, color: "text-warning", bg: "bg-warning/10" },
-          { label: "Pagas", count: mockInstallments.filter(i => i.status === "Paid").length, color: "text-success", bg: "bg-success/10" },
-          { label: "Vencidas", count: mockInstallments.filter(i => i.status === "Overdue").length, color: "text-destructive", bg: "bg-destructive/10" },
-        ].map((s, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
-            className="rounded-xl bg-card p-5 shadow-card border border-border/50"
-          >
-            <p className="text-sm text-muted-foreground mb-1">{s.label}</p>
-            <p className={`font-heading text-2xl font-bold ${s.color}`}>{s.count}</p>
-          </motion.div>
+      <SummaryGrid>
+        {summary.map((s, i) => (
+          <SummaryCard key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
+            <SummaryLabel>{s.label}</SummaryLabel>
+            <SummaryValue $tone={s.tone}>{s.count}</SummaryValue>
+          </SummaryCard>
         ))}
-      </div>
+      </SummaryGrid>
 
-      {/* Search */}
-      <div className="mb-6 relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Buscar parcelas..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9 h-11"
-        />
-      </div>
+      <SearchWrap>
+        <SearchIcon size={16} />
+        <SearchInput placeholder="Buscar parcelas..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      </SearchWrap>
 
-      {/* Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="rounded-xl bg-card shadow-card border border-border/50 overflow-hidden"
-      >
-        <div className="overflow-x-auto">
-          <table className="w-full">
+      <TableCard initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        <Overflow>
+          <Table>
             <thead>
-              <tr className="border-b border-border text-left text-sm text-muted-foreground">
-                <th className="px-6 py-4 font-medium">Contrato</th>
-                <th className="px-6 py-4 font-medium">Cliente</th>
-                <th className="px-6 py-4 font-medium">Vencimento</th>
-                <th className="px-6 py-4 font-medium">Valor</th>
-                <th className="px-6 py-4 font-medium">Status</th>
+              <tr>
+                <HeadCell>Contrato</HeadCell>
+                <HeadCell>Cliente</HeadCell>
+                <HeadCell>Vencimento</HeadCell>
+                <HeadCell>Valor</HeadCell>
+                <HeadCell>Status</HeadCell>
               </tr>
             </thead>
             <tbody>
               {filtered.map((inst, i) => {
-                const config = statusConfig[inst.status];
-                const StatusIcon = config.icon;
+                const cfg = statusConfig[inst.status];
+                const StatusIcon = cfg.icon;
                 return (
-                  <motion.tr
-                    key={inst.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: i * 0.03 }}
-                    className="border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                          <CreditCard className="h-4 w-4 text-primary" />
-                        </div>
-                        <span className="text-sm font-medium text-card-foreground">{inst.contract}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">{inst.client}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                        <Calendar className="h-3.5 w-3.5" />
+                  <Row key={inst.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}>
+                    <Cell>
+                      <ContractCell>
+                        <ContractIcon>
+                          <CreditCard size={16} />
+                        </ContractIcon>
+                        <span>{inst.contract}</span>
+                      </ContractCell>
+                    </Cell>
+                    <Cell style={{ color: "hsl(215 16% 47%)" }}>{inst.client}</Cell>
+                    <Cell>
+                      <DateCell>
+                        <Calendar size={14} />
                         {inst.dueDate}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm font-medium text-card-foreground">{inst.amount}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${config.style}`}>
-                        <StatusIcon className="h-3 w-3" />
-                        {config.label}
-                      </span>
-                    </td>
-                  </motion.tr>
+                      </DateCell>
+                    </Cell>
+                    <Cell>{inst.amount}</Cell>
+                    <Cell>
+                      <StatusBadge $status={inst.status}>
+                        <StatusIcon size={12} />
+                        {cfg.label}
+                      </StatusBadge>
+                    </Cell>
+                  </Row>
                 );
               })}
             </tbody>
-          </table>
-        </div>
-      </motion.div>
+          </Table>
+        </Overflow>
+      </TableCard>
     </div>
   );
 };

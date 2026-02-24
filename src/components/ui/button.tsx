@@ -1,51 +1,122 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
+import styled, { css } from "styled-components";
 
-import { cn } from "@/lib/utils";
+type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "accent" | "hero" | "hero-outline";
+type ButtonSize = "default" | "sm" | "lg" | "xl" | "icon";
 
-const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-input bg-background hover:bg-secondary hover:text-secondary-foreground",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-secondary hover:text-secondary-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        accent: "bg-accent text-accent-foreground hover:bg-accent/90 shadow-sm",
-        hero: "bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg font-bold text-base",
-        "hero-outline": "border-2 border-accent/30 bg-accent/5 hover:bg-accent/10 font-bold text-base",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-12 rounded-lg px-6 text-base",
-        xl: "h-14 rounded-xl px-8 text-lg",
-        icon: "h-10 w-10",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  },
-);
+const variantStyles: Record<ButtonVariant, ReturnType<typeof css>> = {
+  default: css`
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.primaryForeground};
+  `,
+  destructive: css`
+    background: ${({ theme }) => theme.colors.destructive};
+    color: ${({ theme }) => theme.colors.primaryForeground};
+  `,
+  outline: css`
+    background: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.foreground};
+    border: 1px solid ${({ theme }) => theme.colors.border};
+  `,
+  secondary: css`
+    background: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.secondaryForeground};
+  `,
+  ghost: css`
+    background: transparent;
+    color: ${({ theme }) => theme.colors.foreground};
+  `,
+  link: css`
+    background: transparent;
+    color: ${({ theme }) => theme.colors.primary};
+    text-decoration: underline;
+  `,
+  accent: css`
+    background: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.accentForeground};
+  `,
+  hero: css`
+    background: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.accentForeground};
+    font-weight: 700;
+  `,
+  "hero-outline": css`
+    background: transparent;
+    color: ${({ theme }) => theme.colors.accentForeground};
+    border: 2px solid ${({ theme }) => theme.colors.accentForeground};
+    font-weight: 700;
+  `,
+};
+
+const sizeStyles: Record<ButtonSize, ReturnType<typeof css>> = {
+  default: css`
+    min-height: 40px;
+    padding: 0 16px;
+    font-size: 14px;
+  `,
+  sm: css`
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 14px;
+  `,
+  lg: css`
+    min-height: 48px;
+    padding: 0 24px;
+    font-size: 16px;
+  `,
+  xl: css`
+    min-height: 56px;
+    padding: 0 32px;
+    font-size: 18px;
+  `,
+  icon: css`
+    width: 40px;
+    min-height: 40px;
+    padding: 0;
+  `,
+};
+
+const StyledButton = styled.button<{ $variant: ButtonVariant; $size: ButtonSize }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: ${({ theme }) => theme.radius.md};
+  cursor: pointer;
+  transition: filter 0.2s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+
+  > svg {
+    flex-shrink: 0;
+  }
+
+  ${({ $variant }) => variantStyles[$variant]}
+  ${({ $size }) => sizeStyles[$size]}
+`;
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+  ({ variant = "default", size = "default", asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : StyledButton;
+    return <Comp ref={ref} $variant={variant} $size={size} {...props} />;
   },
 );
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+export { Button };

@@ -1,5 +1,34 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ theme }) => theme.colors.muted};
+`;
+
+const Content = styled.div`
+  text-align: center;
+`;
+
+const Code = styled.h1`
+  margin-bottom: 16px;
+  font-size: 56px;
+`;
+
+const Text = styled.p`
+  margin-bottom: 16px;
+  font-size: 22px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const HomeLink = styled.a`
+  color: ${({ theme }) => theme.colors.primary};
+  text-decoration: underline;
+`;
 
 const NotFound = () => {
   const location = useLocation();
@@ -9,15 +38,15 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
+    <Wrapper>
+      <Content>
+        <Code>404</Code>
+        <Text>Oops! Page not found</Text>
+        <HomeLink href="/">
           Return to Home
-        </a>
-      </div>
-    </div>
+        </HomeLink>
+      </Content>
+    </Wrapper>
   );
 };
 

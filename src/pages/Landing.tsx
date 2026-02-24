@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import styled from "styled-components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,6 +27,299 @@ const fadeUp = {
   }),
 };
 
+const Page = styled.div`
+  min-height: 100vh;
+  background: ${({ theme }) => theme.colors.background};
+`;
+
+const Container = styled.div`
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+`;
+
+const Nav = styled.nav`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, ${({ theme }) => theme.colors.background} 86%, transparent);
+`;
+
+const NavInner = styled(Container)`
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Brand = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const BrandIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: ${({ theme }) => theme.radius.md};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.primaryForeground};
+`;
+
+const BrandText = styled.span`
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+`;
+
+const NavLinks = styled.div`
+  display: none;
+  align-items: center;
+  gap: 24px;
+
+  @media (min-width: 768px) {
+    display: flex;
+  }
+`;
+
+const NavAnchor = styled.a`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.foreground};
+  }
+`;
+
+const MobileMenuButton = styled.button`
+  border: 0;
+  background: transparent;
+  color: ${({ theme }) => theme.colors.foreground};
+  cursor: pointer;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const MobileMenu = styled.div`
+  padding: 12px 16px 16px;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.background};
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const MobileMenuStack = styled.div`
+  display: grid;
+  gap: 12px;
+`;
+
+const Hero = styled.section`
+  padding-top: 64px;
+  background: ${({ theme }) => theme.gradients.hero};
+  color: ${({ theme }) => theme.colors.primaryForeground};
+`;
+
+const HeroInner = styled(Container)`
+  padding: 80px 0 120px;
+  display: grid;
+  align-items: center;
+  gap: 48px;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;
+
+const Badge = styled(motion.div)`
+  margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, ${({ theme }) => theme.colors.accent} 30%, transparent);
+  background: color-mix(in srgb, ${({ theme }) => theme.colors.accent} 10%, transparent);
+  padding: 6px 16px;
+  font-size: 14px;
+`;
+
+const HeroTitle = styled(motion.h1)`
+  margin-bottom: 24px;
+  font-size: clamp(38px, 6vw, 64px);
+  line-height: 1.1;
+`;
+
+const GradientText = styled.span`
+  background-image: ${({ theme }) => theme.gradients.accent};
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+`;
+
+const HeroText = styled(motion.p)`
+  margin-bottom: 32px;
+  max-width: 560px;
+  font-size: 20px;
+  color: color-mix(in srgb, ${({ theme }) => theme.colors.primaryForeground} 70%, transparent);
+`;
+
+const HeroActions = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
+`;
+
+const HeroImageWrap = styled(motion.div)`
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: block;
+  }
+`;
+
+const HeroImage = styled.img`
+  width: 100%;
+  border-radius: ${({ theme }) => theme.radius.xl};
+  box-shadow: ${({ theme }) => theme.shadows.elevated};
+`;
+
+const Section = styled.section<{ $alt?: boolean }>`
+  padding: 80px 0;
+  background: ${({ theme, $alt }) => ($alt ? theme.colors.card : "transparent")};
+`;
+
+const SectionCenter = styled.div`
+  max-width: 780px;
+  margin: 0 auto 48px;
+  text-align: center;
+`;
+
+const Label = styled(motion.p)`
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: ${({ theme }) => theme.colors.accent};
+`;
+
+const H2 = styled(motion.h2)`
+  margin-bottom: 16px;
+  font-size: clamp(30px, 4vw, 44px);
+`;
+
+const Muted = styled(motion.p)`
+  font-size: 18px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const Grid3 = styled.div`
+  display: grid;
+  gap: 24px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+`;
+
+const Card = styled(motion.div)`
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  background: ${({ theme }) => theme.colors.card};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+  padding: 28px;
+`;
+
+const CardIcon = styled.div`
+  width: 48px;
+  height: 48px;
+  border-radius: ${({ theme }) => theme.radius.md};
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, ${({ theme }) => theme.colors.destructive} 10%, transparent);
+  color: ${({ theme }) => theme.colors.destructive};
+`;
+
+const CardTitle = styled.h3`
+  margin-bottom: 8px;
+  font-size: 20px;
+`;
+
+const CardText = styled.p`
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const CtaSection = styled(Section)`
+  background: ${({ theme }) => theme.gradients.hero};
+`;
+
+const CtaTitle = styled(motion.h2)`
+  margin-bottom: 16px;
+  font-size: clamp(30px, 4vw, 44px);
+  color: ${({ theme }) => theme.colors.primaryForeground};
+`;
+
+const CtaText = styled(motion.p)`
+  margin-bottom: 32px;
+  font-size: 18px;
+  color: color-mix(in srgb, ${({ theme }) => theme.colors.primaryForeground} 70%, transparent);
+`;
+
+const LeadForm = styled(motion.form)`
+  max-width: 580px;
+  margin: 0 auto;
+  display: grid;
+  gap: 10px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: 1fr 1fr auto;
+  }
+`;
+
+const LeadInput = styled(Input)`
+  background: color-mix(in srgb, ${({ theme }) => theme.colors.primaryForeground} 10%, transparent);
+  border-color: color-mix(in srgb, ${({ theme }) => theme.colors.primaryForeground} 20%, transparent);
+  color: ${({ theme }) => theme.colors.primaryForeground};
+`;
+
+const Footer = styled.footer`
+  padding: 40px 0;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.card};
+`;
+
+const FooterInner = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+`;
+
+const FooterText = styled.p`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
 const Landing = () => {
   const [leadName, setLeadName] = useState("");
   const [leadEmail, setLeadEmail] = useState("");
@@ -34,382 +328,193 @@ const Landing = () => {
 
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: integrate with backend
     setSubmitted(true);
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-              <FileText className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="font-heading text-xl font-bold text-foreground">
-              Contraktor
-            </span>
-          </Link>
+    <Page>
+      <Nav>
+        <NavInner>
+          <Brand to="/">
+            <BrandIcon>
+              <FileText size={20} />
+            </BrandIcon>
+            <BrandText>Contraktor</BrandText>
+          </Brand>
 
-          <div className="hidden items-center gap-6 md:flex">
-            <a href="#problema" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Problema
-            </a>
-            <a href="#solucao" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Solução
-            </a>
-            <a href="#beneficios" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Benefícios
-            </a>
+          <NavLinks>
+            <NavAnchor href="#problema">Problema</NavAnchor>
+            <NavAnchor href="#solucao">Solução</NavAnchor>
+            <NavAnchor href="#beneficios">Benefícios</NavAnchor>
             <Link to="/login">
               <Button variant="ghost" size="sm">Entrar</Button>
             </Link>
             <Link to="/registro">
-              <Button variant="accent" size="sm">
-                Teste grátis
-              </Button>
+              <Button variant="accent" size="sm">Teste grátis</Button>
             </Link>
-          </div>
+          </NavLinks>
 
-          <button
-            className="md:hidden text-foreground"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-        </div>
+          <MobileMenuButton onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </MobileMenuButton>
+        </NavInner>
 
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border bg-background px-4 pb-4">
-            <div className="flex flex-col gap-3 pt-3">
-              <a href="#problema" className="text-sm text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>Problema</a>
-              <a href="#solucao" className="text-sm text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>Solução</a>
-              <a href="#beneficios" className="text-sm text-muted-foreground" onClick={() => setMobileMenuOpen(false)}>Benefícios</a>
-              <Link to="/login"><Button variant="ghost" className="w-full">Entrar</Button></Link>
-              <Link to="/registro"><Button variant="accent" className="w-full">Teste grátis</Button></Link>
-            </div>
-          </div>
+          <MobileMenu>
+            <MobileMenuStack>
+              <NavAnchor href="#problema" onClick={() => setMobileMenuOpen(false)}>Problema</NavAnchor>
+              <NavAnchor href="#solucao" onClick={() => setMobileMenuOpen(false)}>Solução</NavAnchor>
+              <NavAnchor href="#beneficios" onClick={() => setMobileMenuOpen(false)}>Benefícios</NavAnchor>
+              <Link to="/login"><Button variant="ghost">Entrar</Button></Link>
+              <Link to="/registro"><Button variant="accent">Teste grátis</Button></Link>
+            </MobileMenuStack>
+          </MobileMenu>
         )}
-      </nav>
+      </Nav>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-hero pt-16">
-        <div className="container mx-auto px-4 py-20 md:py-32">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              className="text-center lg:text-left"
-            >
-              <motion.div variants={fadeUp} custom={0} className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm text-accent">
-                <Clock className="h-4 w-4" />
-                14 dias grátis • Sem cartão de crédito
-              </motion.div>
-              <motion.h1
-                variants={fadeUp}
-                custom={1}
-                className="mb-6 font-heading text-4xl font-black leading-tight text-primary-foreground md:text-5xl lg:text-6xl"
-              >
-                Contratos, assinaturas e cobranças{" "}
-                <span className="text-gradient">em um só lugar.</span>
-              </motion.h1>
-              <motion.p
-                variants={fadeUp}
-                custom={2}
-                className="mb-8 max-w-lg text-lg text-primary-foreground/70 mx-auto lg:mx-0"
-              >
-                Organize seus contratos e receba automaticamente, sem planilhas e
-                sem inadimplência. Ideal para freelancers, consultores e pequenas
-                empresas.
-              </motion.p>
-              <motion.div variants={fadeUp} custom={3} className="flex flex-col gap-3 sm:flex-row justify-center lg:justify-start">
-                <Link to="/registro">
-                  <Button variant="hero" size="xl" className="w-full sm:w-auto">
-                    Começar grátis <ArrowRight className="ml-1 h-5 w-5" />
-                  </Button>
-                </Link>
-                <a href="#solucao">
-                  <Button variant="hero-outline" size="xl" className="w-full sm:w-auto text-primary-foreground/80 border-primary-foreground/20 hover:bg-primary-foreground/5">
-                    Como funciona
-                  </Button>
-                </a>
-              </motion.div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="hidden lg:block"
-            >
-              <img
-                src={heroImage}
-                alt="Contratos digitais e cobranças automatizadas"
-                className="rounded-2xl shadow-elevated"
-              />
-            </motion.div>
-          </div>
-        </div>
-        {/* Curve divider */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 60L1440 60L1440 0C1440 0 1080 60 720 60C360 60 0 0 0 0L0 60Z" fill="hsl(210 25% 97%)" />
-          </svg>
-        </div>
-      </section>
-
-      {/* Problema */}
-      <section id="problema" className="py-20 md:py-28">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="text-center max-w-3xl mx-auto mb-16"
-          >
-            <motion.p variants={fadeUp} custom={0} className="text-sm font-semibold uppercase tracking-wider text-accent mb-3">
-              O problema
-            </motion.p>
-            <motion.h2 variants={fadeUp} custom={1} className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Ainda usando planilhas para controlar contratos?
-            </motion.h2>
-            <motion.p variants={fadeUp} custom={2} className="text-muted-foreground text-lg">
-              Contratos perdidos em pastas, cobranças manuais, clientes inadimplentes e zero visibilidade financeira. Isso custa tempo e dinheiro.
-            </motion.p>
-          </motion.div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { icon: FileText, title: "Contratos desorganizados", desc: "Documentos espalhados em e-mails, WhatsApp e pastas. Sem controle de versão." },
-              { icon: DollarSign, title: "Cobranças manuais", desc: "Você precisa lembrar de cobrar cada parcela manualmente. Fácil esquecer." },
-              { icon: Shield, title: "Sem proteção jurídica", desc: "Acordos verbais ou informais sem assinatura e sem registro documental." },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                custom={i}
-                className="rounded-xl bg-card p-8 shadow-card border border-border/50 hover:shadow-elevated transition-shadow duration-300"
-              >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-destructive/10">
-                  <item.icon className="h-6 w-6 text-destructive" />
-                </div>
-                <h3 className="mb-2 font-heading text-lg font-bold text-card-foreground">{item.title}</h3>
-                <p className="text-muted-foreground">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Solução */}
-      <section id="solucao" className="bg-card py-20 md:py-28">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="text-center max-w-3xl mx-auto mb-16"
-          >
-            <motion.p variants={fadeUp} custom={0} className="text-sm font-semibold uppercase tracking-wider text-accent mb-3">
-              A solução
-            </motion.p>
-            <motion.h2 variants={fadeUp} custom={1} className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Tudo que você precisa em uma plataforma
-            </motion.h2>
-            <motion.p variants={fadeUp} custom={2} className="text-muted-foreground text-lg">
-              Do contrato à cobrança, automatize todo o processo e foque no que importa: o seu negócio.
-            </motion.p>
-          </motion.div>
-
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: FileText, title: "Crie contratos", desc: "Modelos prontos com variáveis dinâmicas. Gere PDFs profissionais em segundos.", step: "01" },
-              { icon: PenTool, title: "Assinatura digital", desc: "Envie um link seguro. Seu cliente assina de qualquer dispositivo, com validade jurídica.", step: "02" },
-              { icon: DollarSign, title: "Parcelamento automático", desc: "Defina parcelas, juros e multa. O sistema cria cobranças e atualiza status automaticamente.", step: "03" },
-              { icon: BarChart3, title: "Dashboard financeiro", desc: "Veja total a receber, recebido, vencido e receita mensal em tempo real.", step: "04" },
-              { icon: Shield, title: "Segurança jurídica", desc: "Hash SHA256, registro de IP e timestamp. Tudo registrado e auditável.", step: "05" },
-              { icon: Clock, title: "Redução de inadimplência", desc: "Cobranças automáticas via Pix e boleto. Notificações antes do vencimento.", step: "06" },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                custom={i}
-                className="group relative rounded-xl bg-background p-8 border border-border/50 hover:border-accent/30 transition-all duration-300"
-              >
-                <span className="absolute top-6 right-6 font-heading text-4xl font-black text-muted/60">{item.step}</span>
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                  <item.icon className="h-6 w-6 text-accent" />
-                </div>
-                <h3 className="mb-2 font-heading text-lg font-bold text-foreground">{item.title}</h3>
-                <p className="text-muted-foreground">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefícios */}
-      <section id="beneficios" className="py-20 md:py-28">
-        <div className="container mx-auto px-4">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-            >
-              <motion.p variants={fadeUp} custom={0} className="text-sm font-semibold uppercase tracking-wider text-accent mb-3">
-                Por que escolher o Contraktor
-              </motion.p>
-              <motion.h2 variants={fadeUp} custom={1} className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-8">
-                Foque no seu negócio. A gente cuida da burocracia.
-              </motion.h2>
-              <div className="space-y-5">
-                {[
-                  "Crie contratos em menos de 2 minutos",
-                  "Assinatura digital sem sair da plataforma",
-                  "Cobranças automáticas via Pix e boleto",
-                  "Dashboard financeiro em tempo real",
-                  "Sem planilhas, sem retrabalho",
-                  "Plano único de R$ 69/mês após trial",
-                ].map((benefit, i) => (
-                  <motion.div
-                    key={i}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeUp}
-                    custom={i}
-                    className="flex items-start gap-3"
-                  >
-                    <CheckCircle2 className="h-6 w-6 shrink-0 text-accent mt-0.5" />
-                    <span className="text-foreground text-lg">{benefit}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="rounded-2xl bg-card p-8 shadow-elevated border border-border/50"
-            >
-              <div className="mb-6 text-center">
-                <p className="text-sm text-muted-foreground mb-1">Plano único</p>
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-sm text-muted-foreground">R$</span>
-                  <span className="font-heading text-5xl font-black text-foreground">69</span>
-                  <span className="text-muted-foreground">/mês</span>
-                </div>
-                <p className="mt-2 text-sm text-accent font-medium">14 dias grátis • Cancele quando quiser</p>
-              </div>
-              <div className="space-y-3 mb-8">
-                {[
-                  "Contratos ilimitados",
-                  "Assinatura digital ilimitada",
-                  "Cobranças automáticas",
-                  "Dashboard financeiro",
-                  "Gestão de clientes",
-                  "Suporte por e-mail",
-                ].map((feat, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-accent" />
-                    <span className="text-sm text-foreground">{feat}</span>
-                  </div>
-                ))}
-              </div>
-              <Link to="/registro" className="block">
-                <Button variant="accent" size="lg" className="w-full">
-                  Começar teste grátis <ArrowRight className="ml-1 h-4 w-4" />
-                </Button>
+      <Hero>
+        <HeroInner>
+          <motion.div initial="hidden" animate="visible">
+            <Badge variants={fadeUp} custom={0}>
+              <Clock size={16} /> 14 dias grátis • Sem cartão de crédito
+            </Badge>
+            <HeroTitle variants={fadeUp} custom={1}>
+              Contratos, assinaturas e cobranças <GradientText>em um só lugar.</GradientText>
+            </HeroTitle>
+            <HeroText variants={fadeUp} custom={2}>
+              Organize seus contratos e receba automaticamente, sem planilhas e sem inadimplência.
+            </HeroText>
+            <HeroActions variants={fadeUp} custom={3}>
+              <Link to="/registro">
+                <Button variant="hero" size="xl">Começar grátis <ArrowRight size={18} /></Button>
               </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA + Lead Form */}
-      <section className="bg-hero py-20 md:py-28">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="text-center max-w-2xl mx-auto"
-          >
-            <motion.h2 variants={fadeUp} custom={0} className="font-heading text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-              Pronto para organizar seus contratos?
-            </motion.h2>
-            <motion.p variants={fadeUp} custom={1} className="text-primary-foreground/70 text-lg mb-8">
-              Cadastre-se e receba acesso antecipado. Sem compromisso.
-            </motion.p>
-
-            {submitted ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="inline-flex items-center gap-2 rounded-xl bg-accent/20 px-6 py-4 text-accent"
-              >
-                <CheckCircle2 className="h-5 w-5" />
-                <span className="font-semibold">Obrigado! Entraremos em contato em breve.</span>
-              </motion.div>
-            ) : (
-              <motion.form
-                variants={fadeUp}
-                custom={2}
-                onSubmit={handleLeadSubmit}
-                className="flex flex-col gap-3 sm:flex-row sm:gap-2 max-w-md mx-auto"
-              >
-                <Input
-                  type="text"
-                  placeholder="Seu nome"
-                  value={leadName}
-                  onChange={(e) => setLeadName(e.target.value)}
-                  required
-                  className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/40 h-12"
-                />
-                <Input
-                  type="email"
-                  placeholder="Seu e-mail"
-                  value={leadEmail}
-                  onChange={(e) => setLeadEmail(e.target.value)}
-                  required
-                  className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/40 h-12"
-                />
-                <Button variant="hero" size="lg" type="submit" className="shrink-0">
-                  Quero testar
-                </Button>
-              </motion.form>
-            )}
+              <a href="#solucao">
+                <Button variant="hero-outline" size="xl">Como funciona</Button>
+              </a>
+            </HeroActions>
           </motion.div>
-        </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card py-10">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <FileText className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <span className="font-heading font-bold text-foreground">Contraktor</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              © 2026 Contraktor. Todos os direitos reservados.
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+          <HeroImageWrap initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.3 }}>
+            <HeroImage src={heroImage} alt="Contratos digitais e cobranças automatizadas" />
+          </HeroImageWrap>
+        </HeroInner>
+      </Hero>
+
+      <Section id="problema">
+        <Container>
+          <SectionCenter>
+            <Label variants={fadeUp} custom={0}>O problema</Label>
+            <H2 variants={fadeUp} custom={1}>Ainda usando planilhas para controlar contratos?</H2>
+            <Muted variants={fadeUp} custom={2}>Contratos perdidos, cobranças manuais e zero visibilidade financeira.</Muted>
+          </SectionCenter>
+
+          <Grid3>
+            {[
+              { icon: FileText, title: "Contratos desorganizados", desc: "Documentos espalhados em e-mails, WhatsApp e pastas." },
+              { icon: DollarSign, title: "Cobranças manuais", desc: "Você precisa lembrar de cobrar cada parcela manualmente." },
+              { icon: Shield, title: "Sem proteção jurídica", desc: "Acordos sem assinatura e sem registro documental." },
+            ].map((item, i) => (
+              <Card key={item.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
+                <CardIcon>
+                  <item.icon size={22} />
+                </CardIcon>
+                <CardTitle>{item.title}</CardTitle>
+                <CardText>{item.desc}</CardText>
+              </Card>
+            ))}
+          </Grid3>
+        </Container>
+      </Section>
+
+      <Section id="solucao" $alt>
+        <Container>
+          <SectionCenter>
+            <Label variants={fadeUp} custom={0}>A solução</Label>
+            <H2 variants={fadeUp} custom={1}>Tudo que você precisa em uma plataforma</H2>
+            <Muted variants={fadeUp} custom={2}>Do contrato à cobrança, automatize todo o processo.</Muted>
+          </SectionCenter>
+
+          <Grid3>
+            {[
+              { icon: FileText, title: "Crie contratos", desc: "Modelos prontos com variáveis dinâmicas." },
+              { icon: PenTool, title: "Assinatura digital", desc: "Envie um link seguro para assinatura." },
+              { icon: DollarSign, title: "Parcelamento automático", desc: "Defina parcelas, juros e multa." },
+              { icon: BarChart3, title: "Dashboard financeiro", desc: "Receitas e vencimentos em tempo real." },
+              { icon: Shield, title: "Segurança jurídica", desc: "Hash SHA256, IP e timestamp auditáveis." },
+              { icon: Clock, title: "Menos inadimplência", desc: "Cobranças automáticas antes do vencimento." },
+            ].map((item, i) => (
+              <Card key={item.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
+                <CardIcon style={{ background: "color-mix(in srgb, hsl(162 72% 42%) 10%, transparent)", color: "hsl(162 72% 42%)" }}>
+                  <item.icon size={22} />
+                </CardIcon>
+                <CardTitle>{item.title}</CardTitle>
+                <CardText>{item.desc}</CardText>
+              </Card>
+            ))}
+          </Grid3>
+        </Container>
+      </Section>
+
+      <Section id="beneficios">
+        <Container>
+          <SectionCenter>
+            <Label variants={fadeUp} custom={0}>Benefícios</Label>
+            <H2 variants={fadeUp} custom={1}>Foque no seu negócio. A gente cuida da burocracia.</H2>
+            <Muted variants={fadeUp} custom={2}>Crie contratos em minutos e acompanhe receitas com clareza.</Muted>
+          </SectionCenter>
+
+          <Grid3>
+            {[
+              "Crie contratos em menos de 2 minutos",
+              "Assinatura digital sem sair da plataforma",
+              "Cobranças automáticas via Pix e boleto",
+              "Dashboard financeiro em tempo real",
+              "Sem planilhas, sem retrabalho",
+              "Plano único de R$ 69/mês após trial",
+            ].map((benefit, i) => (
+              <Card key={benefit} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
+                <CardIcon style={{ background: "color-mix(in srgb, hsl(162 72% 42%) 10%, transparent)", color: "hsl(162 72% 42%)" }}>
+                  <CheckCircle2 size={22} />
+                </CardIcon>
+                <CardText>{benefit}</CardText>
+              </Card>
+            ))}
+          </Grid3>
+        </Container>
+      </Section>
+
+      <CtaSection>
+        <Container>
+          <SectionCenter>
+            <CtaTitle variants={fadeUp} custom={0}>Pronto para organizar seus contratos?</CtaTitle>
+            <CtaText variants={fadeUp} custom={1}>Cadastre-se e receba acesso antecipado. Sem compromisso.</CtaText>
+            {submitted ? (
+              <Badge initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+                <CheckCircle2 size={18} /> Obrigado! Entraremos em contato em breve.
+              </Badge>
+            ) : (
+              <LeadForm variants={fadeUp} custom={2} onSubmit={handleLeadSubmit}>
+                <LeadInput type="text" placeholder="Seu nome" value={leadName} onChange={(e) => setLeadName(e.target.value)} required />
+                <LeadInput type="email" placeholder="Seu e-mail" value={leadEmail} onChange={(e) => setLeadEmail(e.target.value)} required />
+                <Button variant="hero" size="lg" type="submit">Quero testar</Button>
+              </LeadForm>
+            )}
+          </SectionCenter>
+        </Container>
+      </CtaSection>
+
+      <Footer>
+        <FooterInner>
+          <Brand to="/">
+            <BrandIcon>
+              <FileText size={16} />
+            </BrandIcon>
+            <strong>Contraktor</strong>
+          </Brand>
+          <FooterText>© 2026 Contraktor. Todos os direitos reservados.</FooterText>
+        </FooterInner>
+      </Footer>
+    </Page>
   );
 };
 

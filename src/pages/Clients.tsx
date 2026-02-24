@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import styled from "styled-components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Plus,
-  Search,
-  MoreHorizontal,
-  Users,
-  Mail,
-  Phone,
-} from "lucide-react";
+import { Plus, Search, MoreHorizontal, Mail, Phone } from "lucide-react";
 
 const mockClients = [
   { id: "1", name: "Maria Silva", document: "123.456.789-00", email: "maria@email.com", phone: "(11) 99999-0001", contracts: 3 },
@@ -18,76 +12,181 @@ const mockClients = [
   { id: "4", name: "Pedro Santos", document: "456.789.123-00", email: "pedro@email.com", phone: "(41) 99999-0004", contracts: 1 },
 ];
 
+const Header = styled.div`
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 30px;
+`;
+
+const Subtitle = styled.p`
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const SearchWrap = styled.div`
+  max-width: 380px;
+  margin-bottom: 24px;
+  position: relative;
+`;
+
+const SearchIcon = styled(Search)`
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const SearchInput = styled(Input)`
+  padding-left: 40px;
+`;
+
+const Grid = styled.div`
+  display: grid;
+  gap: 16px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+`;
+
+const Card = styled(motion.div)`
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  background: ${({ theme }) => theme.colors.card};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+  padding: 24px;
+`;
+
+const CardTop = styled.div`
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+
+const Initial = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: color-mix(in srgb, ${({ theme }) => theme.colors.primary} 10%, transparent);
+  color: ${({ theme }) => theme.colors.primary};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+`;
+
+const IconButton = styled.button`
+  border: 0;
+  background: transparent;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+  cursor: pointer;
+`;
+
+const Name = styled.h3`
+  margin-bottom: 4px;
+  font-size: 18px;
+`;
+
+const Document = styled.p`
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const Details = styled.div`
+  display: grid;
+  gap: 10px;
+`;
+
+const DetailRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const Footer = styled.div`
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const ContractsInfo = styled.span`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
 const Clients = () => {
   const [search, setSearch] = useState("");
 
   const filtered = mockClients.filter(
-    (c) =>
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.email.toLowerCase().includes(search.toLowerCase())
+    (c) => c.name.toLowerCase().includes(search.toLowerCase()) || c.email.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <div>
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <Header>
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Clientes</h1>
-          <p className="text-muted-foreground">{mockClients.length} clientes cadastrados</p>
+          <Title>Clientes</Title>
+          <Subtitle>{mockClients.length} clientes cadastrados</Subtitle>
         </div>
         <Button variant="accent">
-          <Plus className="mr-1 h-4 w-4" /> Novo cliente
+          <Plus size={16} /> Novo cliente
         </Button>
-      </div>
+      </Header>
 
-      {/* Search */}
-      <div className="mb-6 relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Buscar clientes..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9 h-11"
-        />
-      </div>
+      <SearchWrap>
+        <SearchIcon size={16} />
+        <SearchInput placeholder="Buscar clientes..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      </SearchWrap>
 
-      {/* Client Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Grid>
         {filtered.map((client, i) => (
-          <motion.div
-            key={client.id}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className="rounded-xl bg-card p-6 shadow-card border border-border/50 hover:shadow-elevated transition-shadow duration-300 cursor-pointer"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-                {client.name.charAt(0)}
-              </div>
-              <button className="text-muted-foreground hover:text-foreground">
-                <MoreHorizontal className="h-5 w-5" />
-              </button>
-            </div>
-            <h3 className="font-heading font-bold text-card-foreground mb-1">{client.name}</h3>
-            <p className="text-xs text-muted-foreground mb-4">{client.document}</p>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Mail className="h-3.5 w-3.5" />
-                <span className="truncate">{client.email}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-3.5 w-3.5" />
+          <Card key={client.id} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+            <CardTop>
+              <Initial>{client.name.charAt(0)}</Initial>
+              <IconButton>
+                <MoreHorizontal size={18} />
+              </IconButton>
+            </CardTop>
+            <Name>{client.name}</Name>
+            <Document>{client.document}</Document>
+            <Details>
+              <DetailRow>
+                <Mail size={14} />
+                <span>{client.email}</span>
+              </DetailRow>
+              <DetailRow>
+                <Phone size={14} />
                 <span>{client.phone}</span>
-              </div>
-            </div>
-            <div className="mt-4 pt-4 border-t border-border/50">
-              <span className="text-xs text-muted-foreground">
+              </DetailRow>
+            </Details>
+            <Footer>
+              <ContractsInfo>
                 {client.contracts} contrato{client.contracts !== 1 ? "s" : ""}
-              </span>
-            </div>
-          </motion.div>
+              </ContractsInfo>
+            </Footer>
+          </Card>
         ))}
-      </div>
+      </Grid>
     </div>
   );
 };

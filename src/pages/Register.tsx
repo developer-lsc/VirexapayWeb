@@ -1,9 +1,128 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileText, ArrowRight } from "lucide-react";
+
+const Page = styled.div`
+  display: flex;
+  min-height: 100vh;
+`;
+
+const FormSide = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+`;
+
+const FormWrap = styled.div`
+  width: 100%;
+  max-width: 380px;
+`;
+
+const Brand = styled(Link)`
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const BrandIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: ${({ theme }) => theme.radius.md};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.primaryForeground};
+`;
+
+const BrandText = styled.span`
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+`;
+
+const Title = styled.h1`
+  margin-bottom: 8px;
+  font-size: 28px;
+`;
+
+const Subtitle = styled.p`
+  margin-bottom: 32px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const Form = styled.form`
+  display: grid;
+  gap: 16px;
+`;
+
+const Field = styled.div`
+  display: grid;
+  gap: 8px;
+`;
+
+const Footer = styled.p`
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const FooterLink = styled(Link)`
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.accent};
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const BrandingSide = styled.div`
+  width: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  background: ${({ theme }) => theme.gradients.hero};
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+`;
+
+const BrandingContent = styled.div`
+  max-width: 420px;
+  text-align: center;
+`;
+
+const BrandingIcon = styled.div`
+  margin: 0 auto 24px;
+  width: 64px;
+  height: 64px;
+  border-radius: ${({ theme }) => theme.radius.xl};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, ${({ theme }) => theme.colors.accent} 20%, transparent);
+  color: ${({ theme }) => theme.colors.accent};
+`;
+
+const BrandingTitle = styled.h2`
+  margin-bottom: 16px;
+  font-size: 32px;
+  color: ${({ theme }) => theme.colors.primaryForeground};
+`;
+
+const BrandingText = styled.p`
+  color: color-mix(in srgb, ${({ theme }) => theme.colors.primaryForeground} 60%, transparent);
+`;
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -12,52 +131,32 @@ const Register = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: integrate auth
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left - Form */}
-      <div className="flex flex-1 items-center justify-center px-4 py-12">
-        <div className="w-full max-w-sm">
-          <Link to="/" className="mb-8 flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-              <FileText className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="font-heading text-xl font-bold text-foreground">Contraktor</span>
-          </Link>
+    <Page>
+      <FormSide>
+        <FormWrap>
+          <Brand to="/">
+            <BrandIcon>
+              <FileText size={20} />
+            </BrandIcon>
+            <BrandText>Contraktor</BrandText>
+          </Brand>
 
-          <h1 className="mb-2 font-heading text-2xl font-bold text-foreground">Crie sua conta</h1>
-          <p className="mb-8 text-muted-foreground">
-            Comece seu trial gratuito de 14 dias. Sem cartão de crédito.
-          </p>
+          <Title>Crie sua conta</Title>
+          <Subtitle>Comece seu trial gratuito de 14 dias. Sem cartão de crédito.</Subtitle>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
+          <Form onSubmit={handleSubmit}>
+            <Field>
               <Label htmlFor="name">Nome completo</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Seu nome"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="h-11"
-              />
-            </div>
-            <div className="space-y-2">
+              <Input id="name" type="text" placeholder="Seu nome" value={name} onChange={(e) => setName(e.target.value)} required />
+            </Field>
+            <Field>
               <Label htmlFor="email">E-mail</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="seu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="h-11"
-              />
-            </div>
-            <div className="space-y-2">
+              <Input id="email" type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </Field>
+            <Field>
               <Label htmlFor="password">Senha</Label>
               <Input
                 id="password"
@@ -67,38 +166,31 @@ const Register = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={8}
-                className="h-11"
               />
-            </div>
-            <Button type="submit" className="w-full h-11" variant="accent">
-              Criar conta grátis <ArrowRight className="ml-1 h-4 w-4" />
+            </Field>
+            <Button type="submit" variant="accent" size="lg">
+              Criar conta grátis <ArrowRight size={16} />
             </Button>
-          </form>
+          </Form>
 
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            Já tem conta?{" "}
-            <Link to="/login" className="font-medium text-accent hover:underline">
-              Entrar
-            </Link>
-          </p>
-        </div>
-      </div>
+          <Footer>
+            Já tem conta? <FooterLink to="/login">Entrar</FooterLink>
+          </Footer>
+        </FormWrap>
+      </FormSide>
 
-      {/* Right - Branding */}
-      <div className="hidden w-1/2 bg-hero lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-12">
-        <div className="max-w-md text-center">
-          <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/20">
-            <FileText className="h-8 w-8 text-accent" />
-          </div>
-          <h2 className="mb-4 font-heading text-3xl font-bold text-primary-foreground">
-            14 dias grátis para testar tudo
-          </h2>
-          <p className="text-primary-foreground/60">
+      <BrandingSide>
+        <BrandingContent>
+          <BrandingIcon>
+            <FileText size={32} />
+          </BrandingIcon>
+          <BrandingTitle>14 dias grátis para testar tudo</BrandingTitle>
+          <BrandingText>
             Contratos, assinatura digital, cobranças automáticas e dashboard financeiro. Tudo incluso.
-          </p>
-        </div>
-      </div>
-    </div>
+          </BrandingText>
+        </BrandingContent>
+      </BrandingSide>
+    </Page>
   );
 };
 

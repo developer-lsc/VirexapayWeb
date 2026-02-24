@@ -1,13 +1,40 @@
+import styled from "styled-components";
+
+const HeadingBlock = styled.div`
+  margin-bottom: 32px;
+`;
+
+const Heading = styled.h1`
+  font-size: 30px;
+`;
+
+const Subheading = styled.p`
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const Card = styled.div`
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  background: ${({ theme }) => theme.colors.card};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+  padding: 32px;
+  text-align: center;
+`;
+
+const Text = styled.p`
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
 const SettingsPage = () => {
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-heading text-2xl font-bold text-foreground">Configurações</h1>
-        <p className="text-muted-foreground">Gerencie sua conta e preferências</p>
-      </div>
-      <div className="rounded-xl bg-card p-8 shadow-card border border-border/50 text-center">
-        <p className="text-muted-foreground">Em breve. Configure seu perfil, assinatura e integrações aqui.</p>
-      </div>
+      <HeadingBlock>
+        <Heading>Configurações</Heading>
+        <Subheading>Gerencie sua conta e preferências</Subheading>
+      </HeadingBlock>
+      <Card>
+        <Text>Em breve. Configure seu perfil, assinatura e integrações aqui.</Text>
+      </Card>
     </div>
   );
 };
