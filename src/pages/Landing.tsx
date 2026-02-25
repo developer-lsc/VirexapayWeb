@@ -12,6 +12,7 @@ import {
   Clock,
   BarChart3,
   ArrowRight,
+  CircleCheck,
   CheckCircle2,
   Menu,
   X,
@@ -124,6 +125,8 @@ const MobileMenuStack = styled.div`
 `;
 
 const Hero = styled.section`
+  position: relative;
+  overflow: hidden;
   padding-top: 64px;
   background: ${({ theme }) => theme.gradients.hero};
   color: ${({ theme }) => theme.colors.primaryForeground};
@@ -146,6 +149,7 @@ const Badge = styled(motion.div)`
   align-items: center;
   gap: 8px;
   border-radius: 999px;
+  color: ${({ theme }) => theme.colors.accent};
   border: 1px solid color-mix(in srgb, ${({ theme }) => theme.colors.accent} 30%, transparent);
   background: color-mix(in srgb, ${({ theme }) => theme.colors.accent} 10%, transparent);
   padding: 6px 16px;
@@ -196,6 +200,24 @@ const HeroImage = styled.img`
   box-shadow: ${({ theme }) => theme.shadows.elevated};
 `;
 
+const HeroBottomShape = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: ${({ theme }) => theme.colors.background};
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+
+    path {
+      fill: ${({ theme }) => theme.colors.background};
+    }
+  }
+`;
+
 const Section = styled.section<{ $alt?: boolean }>`
   padding: 80px 0;
   background: ${({ theme, $alt }) => ($alt ? theme.colors.card : "transparent")};
@@ -241,6 +263,11 @@ const Card = styled(motion.div)`
   background: ${({ theme }) => theme.colors.card};
   box-shadow: ${({ theme }) => theme.shadows.card};
   padding: 28px;
+  transition: box-shadow 0.25s ease;
+
+  &:hover {
+    box-shadow: ${({ theme }) => theme.shadows.elevated};
+  }
 `;
 
 const CardIcon = styled.div`
@@ -262,6 +289,136 @@ const CardTitle = styled.h3`
 
 const CardText = styled.p`
   color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const BenefitsSection = styled.section`
+  padding: 80px 0;
+
+  @media (min-width: 768px) {
+    padding: 112px 0;
+  }
+`;
+
+const BenefitsGrid = styled.div`
+  display: grid;
+  align-items: center;
+  gap: 48px;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+`;
+
+const BenefitsLeft = styled.div``;
+
+const BenefitsLabel = styled(motion.p)`
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.accent};
+`;
+
+const BenefitsTitle = styled(motion.h2)`
+  margin-bottom: 32px;
+  font-size: 30px;
+  line-height: 1.2;
+  color: ${({ theme }) => theme.colors.foreground};
+
+  @media (min-width: 768px) {
+    font-size: 36px;
+  }
+`;
+
+const BenefitsList = styled.div`
+  display: grid;
+  gap: 20px;
+`;
+
+const BenefitItem = styled(motion.div)`
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+`;
+
+const BenefitItemText = styled.span`
+  font-size: 18px;
+  color: ${({ theme }) => theme.colors.foreground};
+`;
+
+const PricingCard = styled(motion.div)`
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, ${({ theme }) => theme.colors.border} 50%, transparent);
+  background: ${({ theme }) => theme.colors.card};
+  box-shadow: ${({ theme }) => theme.shadows.elevated};
+  padding: 32px;
+`;
+
+const PricingHeader = styled.div`
+  margin-bottom: 24px;
+  text-align: center;
+`;
+
+const PricingPlanLabel = styled.p`
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const PricingValueRow = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+`;
+
+const PricingCurrency = styled.span`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const PricingValue = styled.span`
+  font-size: clamp(40px, 6vw, 48px);
+  font-weight: 900;
+  line-height: 1;
+  color: ${({ theme }) => theme.colors.foreground};
+`;
+
+const PricingPeriod = styled.span`
+  color: ${({ theme }) => theme.colors.mutedForeground};
+`;
+
+const PricingSubtext = styled.p`
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.accent};
+`;
+
+const PricingFeatures = styled.div`
+  margin-bottom: 32px;
+  display: grid;
+  gap: 12px;
+`;
+
+const PricingFeatureItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const PricingFeatureText = styled.span`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.foreground};
+`;
+
+const FullWidthLink = styled(Link)`
+  display: block;
+`;
+
+const PricingButton = styled(Button)`
+  width: 100%;
 `;
 
 const CtaSection = styled(Section)`
@@ -386,7 +543,11 @@ const Landing = () => {
             </HeroText>
             <HeroActions variants={fadeUp} custom={3}>
               <Link to="/registro">
-                <Button variant="hero" size="xl">Começar grátis <ArrowRight size={18} /></Button>
+                <Button
+                  variant="hero"
+                  size="xl">
+                  Começar grátis <ArrowRight size={18} />
+                </Button>
               </Link>
               <a href="#solucao">
                 <Button variant="hero-outline" size="xl">Como funciona</Button>
@@ -398,6 +559,11 @@ const Landing = () => {
             <HeroImage src={heroImage} alt="Contratos digitais e cobranças automatizadas" />
           </HeroImageWrap>
         </HeroInner>
+        <HeroBottomShape aria-hidden="true">
+          <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 60L1440 60L1440 0C1440 0 1080 60 720 60C360 60 0 0 0 0L0 60Z"/>
+          </svg>
+        </HeroBottomShape>
       </Hero>
 
       <Section id="problema">
@@ -405,14 +571,14 @@ const Landing = () => {
           <SectionCenter>
             <Label variants={fadeUp} custom={0}>O problema</Label>
             <H2 variants={fadeUp} custom={1}>Ainda usando planilhas para controlar contratos?</H2>
-            <Muted variants={fadeUp} custom={2}>Contratos perdidos, cobranças manuais e zero visibilidade financeira.</Muted>
+            <Muted variants={fadeUp} custom={2}>Contratos perdidos em pastas, cobranças manuais, clientes inadimplentes e zero visibilidade financeira. Isso custa tempo e dinheiro.</Muted>
           </SectionCenter>
 
           <Grid3>
             {[
               { icon: FileText, title: "Contratos desorganizados", desc: "Documentos espalhados em e-mails, WhatsApp e pastas." },
               { icon: DollarSign, title: "Cobranças manuais", desc: "Você precisa lembrar de cobrar cada parcela manualmente." },
-              { icon: Shield, title: "Sem proteção jurídica", desc: "Acordos sem assinatura e sem registro documental." },
+              { icon: Shield, title: "Sem proteção jurídica", desc: "Acordos verbais ou informais sem assinatura e sem registro documental." },
             ].map((item, i) => (
               <Card key={item.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
                 <CardIcon>
@@ -455,33 +621,70 @@ const Landing = () => {
         </Container>
       </Section>
 
-      <Section id="beneficios">
+      <BenefitsSection id="beneficios">
         <Container>
-          <SectionCenter>
-            <Label variants={fadeUp} custom={0}>Benefícios</Label>
-            <H2 variants={fadeUp} custom={1}>Foque no seu negócio. A gente cuida da burocracia.</H2>
-            <Muted variants={fadeUp} custom={2}>Crie contratos em minutos e acompanhe receitas com clareza.</Muted>
-          </SectionCenter>
+          <BenefitsGrid>
+            <BenefitsLeft>
+              <BenefitsLabel initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
+                Por que escolher o Virexapay
+              </BenefitsLabel>
+              <BenefitsTitle initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}>
+                Foque no seu negócio. A gente cuida da burocracia.
+              </BenefitsTitle>
 
-          <Grid3>
-            {[
-              "Crie contratos em menos de 2 minutos",
-              "Assinatura digital sem sair da plataforma",
-              "Cobranças automáticas via Pix e boleto",
-              "Dashboard financeiro em tempo real",
-              "Sem planilhas, sem retrabalho",
-              "Plano único de R$ 69/mês após trial",
-            ].map((benefit, i) => (
-              <Card key={benefit} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
-                <CardIcon style={{ background: "color-mix(in srgb, hsl(162 72% 42%) 10%, transparent)", color: "hsl(162 72% 42%)" }}>
-                  <CheckCircle2 size={22} />
-                </CardIcon>
-                <CardText>{benefit}</CardText>
-              </Card>
-            ))}
-          </Grid3>
+              <BenefitsList>
+                {[
+                  "Crie contratos em menos de 2 minutos",
+                  "Assinatura digital sem sair da plataforma",
+                  "Cobranças automáticas via Pix e boleto",
+                  "Dashboard financeiro em tempo real",
+                  "Sem planilhas, sem retrabalho",
+                  "Plano único de R$ 69/mês após trial",
+                ].map((benefit, i) => (
+                  <BenefitItem key={benefit} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i + 2}>
+                    <CircleCheck size={24} color="hsl(162 72% 42%)" style={{ flexShrink: 0, marginTop: 2 }} />
+                    <BenefitItemText>{benefit}</BenefitItemText>
+                  </BenefitItem>
+                ))}
+              </BenefitsList>
+            </BenefitsLeft>
+
+            <PricingCard initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={2}>
+              <PricingHeader>
+                <PricingPlanLabel>Plano único</PricingPlanLabel>
+                <PricingValueRow>
+                  <PricingCurrency>R$</PricingCurrency>
+                  <PricingValue>69</PricingValue>
+                  <PricingPeriod>/mês</PricingPeriod>
+                </PricingValueRow>
+                <PricingSubtext>14 dias grátis • Cancele quando quiser</PricingSubtext>
+              </PricingHeader>
+
+              <PricingFeatures>
+                {[
+                  "Contratos ilimitados",
+                  "Assinatura digital ilimitada",
+                  "Cobranças automáticas",
+                  "Dashboard financeiro",
+                  "Gestão de clientes",
+                  "Suporte por e-mail",
+                ].map((feature) => (
+                  <PricingFeatureItem key={feature}>
+                    <CircleCheck size={16} color="hsl(162 72% 42%)" />
+                    <PricingFeatureText>{feature}</PricingFeatureText>
+                  </PricingFeatureItem>
+                ))}
+              </PricingFeatures>
+
+              <FullWidthLink to="/registro">
+                <PricingButton variant="accent" size="lg">
+                  Começar teste grátis <ArrowRight size={16} />
+                </PricingButton>
+              </FullWidthLink>
+            </PricingCard>
+          </BenefitsGrid>
         </Container>
-      </Section>
+      </BenefitsSection>
 
       <CtaSection>
         <Container>

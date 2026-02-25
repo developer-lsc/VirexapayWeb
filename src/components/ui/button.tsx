@@ -40,12 +40,20 @@ const variantStyles: Record<ButtonVariant, ReturnType<typeof css>> = {
     background: ${({ theme }) => theme.colors.accent};
     color: ${({ theme }) => theme.colors.accentForeground};
     font-weight: 700;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
   `,
   "hero-outline": css`
     background: transparent;
     color: ${({ theme }) => theme.colors.accentForeground};
-    border: 2px solid ${({ theme }) => theme.colors.accentForeground};
+    border: 2px solid ${({ theme }) => theme.colors.mutedForeground};
     font-weight: 700;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
   `,
 };
 
